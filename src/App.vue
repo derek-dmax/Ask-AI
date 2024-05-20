@@ -22,6 +22,7 @@ import { RouterLink, RouterView } from 'vue-router'
       </svg>
     </router-link>
     <ul class="flex xl:text-2xl">
+      <router-link to="/list" class="px-2">plan</router-link>
       <router-link to="/text" class="px-2">text</router-link>
       <router-link to="/audio" class="px-2">audio</router-link>
       <router-link to="/image" class="px-2">image</router-link>

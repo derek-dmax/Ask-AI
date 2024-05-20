@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import TextView from '../views/TextView.vue'
 import AudioView from '../views/AudioView.vue'
 import ImageView from '../views/ImageView.vue'
+import PlanView from '../views/PlanView.vue'
 import { useTokenizeStore } from '../stores/tokenize'
 
 const router = createRouter({
@@ -12,6 +13,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/list',
+      name: 'list',
+      component: PlanView
     },
     {
       path: '/text',
