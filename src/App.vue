@@ -5,7 +5,7 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <nav>
     <router-link to="/" class="flex">
-      <h1 class="mr-2">Ask AI</h1>
+      <h1 class="mr-2">Recruit AI</h1>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

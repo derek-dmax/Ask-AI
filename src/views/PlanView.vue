@@ -31,12 +31,12 @@
       </svg>
     </button>
   </div>
-  <pre>{{ JSON.parse(PlanChatStore.gptResponse) }}</pre>
-  <article>
-    <h2 v-html="JSON.parse(PlanChatStore.gptResponse).project_name"></h2>
+  <pre v-if="PlanChatStore.gptResponse">{{ project }}</pre>
+  <article v-if="PlanChatStore.gptResponse">
+    <h2 v-html="project.project_name"></h2>
     <ol>
       <li
-        v-for="item in JSON.parse(PlanChatStore.gptResponse).tasks"
+        v-for="item in project.tasks"
         :key="item.task_id" @click="changeStatus(item)"
         :class="{ 'del' : item.task_status === 'Completed'}"
         style="cursor:pointer">
@@ -46,16 +46,18 @@
   </article>
 </template>
 <script setup>
-import { ref } from  'vue'
 import { usePlanChatStore } from '../stores/planChat'
+import { computed } from 'vue'
+
 const PlanChatStore = usePlanChatStore()
 
+const project = computed(() => JSON.parse(PlanChatStore.gptResponse));
+
 const
-  showData = ref(false),
   changeStatus = (item) => {
-    item.task_status = item.task_status === "Not Started" ? "Completed" : "Not Started"
-  },
-  project = ref({})
+    console.log(item);
+    PlanChatStore.changeStatus(item, item.task_status === "Not Started" ? "Completed" : "Not Started");
+  }
 
 const sendQuestion = () => {
   PlanChatStore.createPrompt()
@@ -64,7 +66,7 @@ const sendQuestion = () => {
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
-
+changeStatus, clear
 .prompt {
   margin-top: -18px;
 }

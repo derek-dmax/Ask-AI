@@ -52,6 +52,10 @@ export const usePlanChatStore = defineStore('planChat', () => {
     }
   }
 
+  function changeStatus(item, status) {
+    item.task_status = status
+  }
+
   function clearChat() {
     question.value = ''
     prompt.value = []
@@ -60,5 +64,5 @@ export const usePlanChatStore = defineStore('planChat', () => {
     tokenizeStore.tokenLength = 0
   }
 
-  return { question, prompt, createPrompt, sendPrompt, gptResponse, isLoadingGPT, clearChat }
+  return { question, prompt, createPrompt, sendPrompt, gptResponse, isLoadingGPT, clearChat, changeStatus }
 })
