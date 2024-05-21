@@ -34,17 +34,20 @@
   <div style="display: flex">
     <div
       style="color:#AF78E5; width:100%; text-align:center; cursor:pointer; margin-bottom: 20px;"
-      @click="work = dlWork; consultant = 'Dan Lang'; PlanChatStore.question = `Plan a week for Dan Lang, an agency recruitment consultant, with ${work.length} jobs and a number of candidates for each job to review`">
-        Plan a week for Dan Lang an agency recruitment consultant
+      @click="work = dlWork; consultant = 'Dan Lang'; PlanChatStore.question = `Plan the week for Dan Lang, an agency recruitment consultant, with ${work.length} jobs and a number of candidates for each job to review`">
+        Plan the week for Dan Lang an agency recruitment consultant
     </div>
     <div
     style="color:#AF78E5; width:100%; text-align:center; cursor:pointer; margin-bottom: 20px;"
-    @click="work = fwWork; consultant = 'Fria West'; PlanChatStore.question = `Plan a week for Fria West, an agency recruitment consultant, with ${work.length} jobs and a number of candidates for each job to review`">
-      Plan a week for Fria West an agency recruitment consultant
+    @click="work = fwWork; consultant = 'Fria West'; PlanChatStore.question = `Plan the week for Fria West, an agency recruitment consultant, with ${work.length} jobs and a number of candidates for each job to review`">
+      Plan the week for Fria West an agency recruitment consultant
   </div>
   </div>
   <pre v-if="false">{{ project }}</pre>
   <article v-if="PlanChatStore.gptResponse">
+    <div style="font-size: 20px; background:none; color: blue; position:relative; top: -19px; float:right">
+      {{ consultant }}
+    </div>
     <h2 v-html="project.project_name"></h2>
     <ol>
       <li
@@ -244,7 +247,7 @@ const
 
 const sendQuestion = () => {
   showSpinner.value = true;
-  PlanChatStore.question = PlanChatStore.question
+  if(consultant.value) PlanChatStore.question = PlanChatStore.question 
     + '. Also schedule in time to liaise with the hiring manager about each job plus to maintain your CRM data'
     + '. Suggest key candidates to review for each job based on their status and rating'
     + '. Prioritise good candidates that are at interview stage to be progressed as a high rank task'
@@ -362,7 +365,7 @@ article {
 }
 
 h2 {
-  margin: 0;
+  margin: -2px 0;
   font-size: 4.5vmin;
   white-space: pre;
   position: relative;
