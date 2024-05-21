@@ -32,7 +32,7 @@ export const usePlanChatStore = defineStore('planChat', () => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({"question": question.value + ` can you create a project name of 
-            no more than 4 words, can you use UK English and return JSON (only) of the form:
+            no more than 6 words, can you use UK English and return JSON (only) of the form:
             {
               'project_name: 'string',
               'tasks' : [

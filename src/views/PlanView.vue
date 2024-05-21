@@ -4,7 +4,7 @@
     <div class="relative flex flex-grow items-stretch focus-within:z-10">
       <input
         v-model="PlanChatStore.question"
-        placeholder="Enter a brief description of a project you would like to plan tasks for."
+        placeholder="Enter a brief description of a project you would like to plan tasks for or click an option listed below."
         class="question-input"
       />
     </div>
@@ -31,7 +31,18 @@
       </svg>
     </button>
   </div>
-  <div style="color:#AF78E5; width:100%; text-align:center; cursor:pointer; margin-bottom: 20px;" @click="PlanChatStore.question = `Plan a week for an agency recruitment consultant with ${work.length} jobs and a number of candidates for each job to review`">Plan a week for an agency recruitment consultant</div>
+  <div style="display: flex">
+    <div
+      style="color:#AF78E5; width:100%; text-align:center; cursor:pointer; margin-bottom: 20px;"
+      @click="work = dlWork; consultant = 'Dan Lang'; PlanChatStore.question = `Plan a week for Dan Lang, an agency recruitment consultant, with ${work.length} jobs and a number of candidates for each job to review`">
+        Plan a week for Dan Lang an agency recruitment consultant
+    </div>
+    <div
+    style="color:#AF78E5; width:100%; text-align:center; cursor:pointer; margin-bottom: 20px;"
+    @click="work = fwWork; consultant = 'Fria West'; PlanChatStore.question = `Plan a week for Fria West, an agency recruitment consultant, with ${work.length} jobs and a number of candidates for each job to review`">
+      Plan a week for Fria West an agency recruitment consultant
+  </div>
+  </div>
   <pre v-if="false">{{ project }}</pre>
   <article v-if="PlanChatStore.gptResponse">
     <h2 v-html="project.project_name"></h2>
@@ -44,14 +55,17 @@
         style="cursor:pointer"
         :title="item.task_description">
         {{ item.task_name }}
-        <div style="font-size: 12px;background:none">{{ item.task_description }}</div>
+        <div style="font-size: 14px;background:none">{{ item.task_description }}</div>
       </li>
     </ol>
   </article>
   <section v-if="!PlanChatStore.gptResponse && showSpinner">
-    <div style="display:flex">
-      <iframe src="https://giphy.com/embed/7VzgMsB6FLCilwS30v" width="800" height="700" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-      <span style="font-size: 2em; padding-left: 10px;text-align: center; max-width:300px">This may take a couple of minutes to process.</span>
+    <div>
+      <div class="loading">
+    <div class="bounceball"></div>
+    <div class="text">PROCESSING DATA</div>
+  </div>
+        <span style="font-size: 1.9em; color: #fbae17; padding-left: 30px;text-align: center; max-width:400px">This may take a couple of minutes to complete.</span>
     </div>
   </section>
 </template>
@@ -64,10 +78,16 @@ const
   showSpinner = ref(false);
 
 const project = computed(() => JSON.parse(PlanChatStore.gptResponse)),
+  consultant = ref(null),
   work =
+    ref([]),
+  dlWork =
     ref([{
         job_title: 'Project Manager',
         fee: 2000,
+        hiring_manager: 'Frank Fernandes',
+        phone: '01234567890',
+        company: 'FRG',
         candidates: [
           {
             name: 'Derek Macrae',
@@ -99,6 +119,9 @@ const project = computed(() => JSON.parse(PlanChatStore.gptResponse)),
       {
         job_title: 'Power BI Developer',
         fee: 1500,
+        hiring_manager: 'Jon Steele',
+        company: 'Capita',
+        phone: '1234567890',
         candidates: [
           {
             name: 'Derek Macrae',
@@ -120,6 +143,86 @@ const project = computed(() => JSON.parse(PlanChatStore.gptResponse)),
       {
         job_title: 'Data Analyst',
         fee: 2500,
+        hiring_manager: 'Sue Franks',
+        company: 'KTB',
+        phone: '1234567890',
+        candidates: [
+          {
+            name: 'Roderick Macrae',
+            status: 'Not Reviewed',
+            rating: 6
+          },
+          {
+            name: 'Samantha Smith',
+            status: 'Interview',
+            rating: 8
+          }        ]
+      }]),
+  fwWork =
+    ref([{
+        job_title: 'Project Manager',
+        fee: 2000,
+        hiring_manager: 'Samantha Smith',
+        phone: '01234567890',
+        company: 'IBM',
+        candidates: [
+          {
+            name: 'Dugal Doge',
+            status: 'Not Reviewed',
+            rating: 10
+          },
+          {
+            name: 'Sarah R. Smith',
+            status: 'Not Reviewed',
+            rating: 8
+          },
+          {
+            name: 'John Doe',
+            status: 'Not Reviewed',
+            rating: 7
+          },
+          {
+            name: 'Janet Macarthur',
+            status: 'Not Reviewed',
+            rating: 9
+          },
+          {
+            name: 'William Willforce',
+            status: 'Not Reviewed',
+            rating: 7
+          }
+        ]
+      },
+      {
+        job_title: 'CTO',
+        fee: 7800,
+        hiring_manager: 'Jon Steele',
+        company: 'CRT',
+        phone: '1234567890',
+        candidates: [
+          {
+            name: 'Derek Macrae',
+            status: 'Not Reviewed',
+            rating: 6
+          },
+          {
+            name: 'Sue Smith',
+            status: 'Not Reviewed',
+            rating: 8
+          },
+          {
+            name: 'Jack Doe',
+            status: 'Interview',
+            rating: 10
+          }
+        ]
+      },
+      {
+        job_title: 'Data Analyst',
+        fee: 2500,
+        hiring_manager: 'Sam Toner',
+        company: 'Excel',
+        phone: '1234567890',
         candidates: [
           {
             name: 'Roderick Macrae',
@@ -142,10 +245,10 @@ const
 const sendQuestion = () => {
   showSpinner.value = true;
   PlanChatStore.question = PlanChatStore.question
-    + '. Also schedule in time to liaise with the hiring manager about each job plus to maintain your CRM data.'
-    + '. Suggest key candidates to review for each job based on their status and rating.'
-    + '. Prioritise good candidates that are at interview stage to be progressed as a high rank task.'
-    + ' Prioritise the work on the following jobs based on the fee: '
+    + '. Also schedule in time to liaise with the hiring manager about each job plus to maintain your CRM data'
+    + '. Suggest key candidates to review for each job based on their status and rating'
+    + '. Prioritise good candidates that are at interview stage to be progressed as a high rank task'
+    + '. Prioritise the work on the following jobs based on the fee: '
     + JSON.stringify(work.value)
   PlanChatStore.createPrompt()
   PlanChatStore.sendPrompt()
@@ -157,18 +260,62 @@ changeStatus, clear
 .prompt {
   margin-top: -18px;
 }
+
+.text {
+  color: #fbae17;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.bounceball {
+  position: relative;
+  display: inline-block;
+  height: 25x;
+  width: 25px;
+  padding-left:2px;
+  &:before {
+    position: absolute;
+    content: '';
+    display: block;
+    top: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #fbae17;
+    transform-origin: 50%;
+    animation: bounce 500ms alternate infinite ease;
+  }
+}
+
+@keyframes bounce {
+  0% {
+    top: 40px;
+    height: 5px;
+    border-radius: 60px 60px 20px 20px;
+    transform: scaleX(2);
+  }
+  35% {
+    height: 25px;
+    border-radius: 50%;
+    transform: scaleX(1);
+  }
+  100% {
+    top: -18px;
+  }
+}
+
 article {
   font-family: 'Indie Flower', 'Patrick Hand SC', 'Comic Neue', 'Comic Sans', 'Comic Sans MS', Helvetica, Arial, sans-serif;
   font-size: 5vmin;
   background: white;
   padding: 0.7em 2em 1.5em 3em;
-  width: 100vmin;
+  width: 115vmin;
   height: 150vmin;
   background: 
     /* radial-gradient(circle at 1em 50%, #000 0.3em, #0000 0.31em) 0 0 / 100% 33.3% repeat-y, */
     radial-gradient(circle at 0.4em 50%, #000 0.125em, #0000 0.135em) 0 0 / 100% 3vmin repeat-y,
     linear-gradient(90deg, #0000 2.6em, #fbb 0 2.65em, #0000 0),
-    repeating-linear-gradient(#0000 0 4.85%, #99f 0 4.95%) 100% 50% / calc(100% - 2.65em) 85% no-repeat,
+    /* repeating-linear-gradient(#0000 1.965% 1.975%, rgb(224, 224, 254) 1.966% 1.976%) 100% 50% / calc(100% - 2.65em) 85% no-repeat, */
     #eee;
   border-radius: 0.05em;
   box-shadow: 
@@ -275,7 +422,7 @@ li {
 }
 
 ol {
-  line-height: 4.65vmin;
+  line-height: 3.2vmin;
   margin-top: 3.5vmin;
   color:black;
   background:none !important;
