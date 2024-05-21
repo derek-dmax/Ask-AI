@@ -14,7 +14,6 @@ export const usePlanChatStore = defineStore('planChat', () => {
 
     // create prompt array
     prompt.value.push(chatQuestion)
-    tokenizeStore.checkTokens(chatQuestion.content)
   }
 
   async function sendPrompt() {
@@ -22,6 +21,7 @@ export const usePlanChatStore = defineStore('planChat', () => {
       alert('You have not entered an instruction.')
     } else {
       isLoadingGPT.value = true
+      gptResponse.value = ''
       console.log(question.value);
 
       const response = await fetch(
@@ -31,9 +31,10 @@ export const usePlanChatStore = defineStore('planChat', () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({"question": question.value + ` and return JSON of the form
+            body: JSON.stringify({"question": question.value + ` can you create a project name of 
+            no more than 4 words, can you use UK English and return JSON (only) of the form:
             {
-              'project_name: 'value',
+              'project_name: 'string',
               'tasks' : [
                 {
                   'task_id': string,
